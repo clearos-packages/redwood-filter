@@ -1,4 +1,4 @@
-# ClearSync RPM spec
+# Redwood Content Filter RPM spec
 Name: redwood-filter
 Version: 1.0
 Release: 1%{dist}
