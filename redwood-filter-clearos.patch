@@ -1,0 +1,111 @@
+diff -ruN go/src/code.google.com/p/redwood-filter/config/redwood.conf go-clearos/src/code.google.com/p/redwood-filter/config/redwood.conf
+--- go/src/code.google.com/p/redwood-filter/config/redwood.conf	2015-01-16 13:17:31.682775378 -0500
++++ go-clearos/src/code.google.com/p/redwood-filter/config/redwood.conf	2015-01-16 13:42:34.411824338 -0500
+@@ -1,14 +1,14 @@
+-categories = /etc/redwood/categories
++categories = /etc/redwood-filter/categories
+ threshold 200
+ http-proxy :6502
+-transparent-https :6510
++#transparent-https :6510
+ 
+-acls /etc/redwood/acls.conf
+-blockpage /etc/redwood/block.html
++acls /etc/redwood-filter/acls.conf
++blockpage /etc/redwood-filter/block.html
+ 
+-tls-cert /etc/redwood/root.pem
+-tls-key /etc/redwood/root_key.pem
+-tls-log /var/log/redwood/tls.log
++#tls-cert /etc/redwood-filter/root.pem
++#tls-key /etc/redwood-filter/root_key.pem
++#tls-log /var/log/redwood-filter/tls.log
+ 
+-query-changes /etc/redwood/safesearch.conf
+-access-log /var/log/redwood/access.log
++query-changes /etc/redwood-filter/safesearch.conf
++access-log /var/log/redwood-filter/access.log
+diff -ruN go/src/code.google.com/p/redwood-filter/startup/redhat go-clearos/src/code.google.com/p/redwood-filter/startup/redhat
+--- go/src/code.google.com/p/redwood-filter/startup/redhat	2015-01-16 13:17:31.688775378 -0500
++++ go-clearos/src/code.google.com/p/redwood-filter/startup/redhat	2015-01-16 13:26:47.407793484 -0500
+@@ -1,48 +1,64 @@
+ #!/bin/sh
+ #
+-# Startup script for redwood
++# Startup script for redwood-filter
+ #
+ # chkconfig: 345 85 15
+ # description: content-filtering proxy server
+-# processname: redwood
++# processname: redwood-filter
+ 
+ . /etc/rc.d/init.d/functions
+ 
+-pidfile="/var/run/redwood.pid"
++RETVAL=0
++PID_FILE="/var/run/redwood-filter.pid"
+ 
+ case "$1" in
+ 	start)
+-		echo -n "Starting redwood: "
++		echo -n "Starting redwood-filter: "
+ 		ulimit -n 65535
+-		daemon redwood -pidfile $pidfile '>/dev/null' '2>>/var/log/redwood/errors.log' '&'
++		daemon --user redwood redwood-filter -c /etc/redwood-filter/redwood.conf -pidfile $PID_FILE '>/dev/null' '2>>/var/log/redwood-filter/errors.log' '&'
+ 		echo
+-		touch /var/lock/subsys/redwood
++		touch /var/lock/subsys/redwood-filter
+ 		;;
+ 	stop)
+-		echo -n "Shutting down redwood: "
+-		if [ -e $pidfile ] && [ ! -e /proc/`cat $pidfile` ]
++		echo -n "Shutting down redwood-filter: "
++		if [ -e $PID_FILE ] && [ ! -e /proc/`cat $PID_FILE` ]
+ 		then
+-			rm $pidfile
++			rm $PID_FILE
+ 		fi
+-		killproc redwood
++		killproc redwood-filter
+ 		echo
+-		rm -r /var/lock/subsys/redwood
++		rm -r /var/lock/subsys/redwood-filter
+ 		;;
+ 	status)
+-		status redwood
++		status redwood-filter
+ 		;;
+ 	restart)
+ 		$0 stop
+ 		$0 start
++		RETVAL=$?
+ 		;;
+ 	reload)
+-		echo -n "Reloading redwood configuration: "
+-		killproc redwood -HUP
++		echo -n "Reloading redwood-filter configuration: "
++		killproc redwood-filter -HUP
+ 		echo
+ 		;;
++	condrestart)
++		if [ -f /var/lock/subsys/redwood-filter ]; then
++			$0 stop
++			$0 start
++			RETVAL=$?
++		fi
++		;;
++	condreload)
++		if [ -f /var/lock/subsys/redwood-filter ]; then
++			killproc redwood-filter SIGHUP
++			RETVAL=$?
++			echo
++		fi
++		;;
+ 	*)
+-		echo "Usage: $0 {start|stop|restart|reload|status}"
++		echo "Usage: $0 {start|stop|restart|reload|condrestart|condreload|status}"
+ 		exit 1
+ esac
+ 
+-exit 0
++exit $RETVAL

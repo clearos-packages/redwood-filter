@@ -1,4 +1,6 @@
 # Redwood Content Filter RPM spec
+%global debug_package %{nil}
+
 Name: redwood-filter
 Version: 1.0
 Release: 1%{dist}
@@ -15,17 +17,18 @@ Requires(pre): /sbin/ldconfig, /usr/sbin/useradd, /usr/bin/getent
 Requires(postun): /usr/sbin/userdel
 Requires(post): /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
+Patch0: redwood-filter-clearos.patch
 
 %description
 Redwood Content Filter
 Report bugs to: http://www.clearfoundation.com/docs/developer/bug_tracker/
 
-# Build
 %prep
-mkdir -vp $(pwd)/go/{bin,pkg,src}
 
 %setup -q
+mkdir -vp $(pwd)/go/{bin,pkg,src}
 GOPATH=$(pwd)/go go get code.google.com/p/redwood-filter
+%patch0 -b .clearos
 
 %build
 GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
@@ -34,9 +37,9 @@ GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
 %install
 mkdir -vp %{buildroot}/%{_sbindir}
 mkdir -vp %{buildroot}/%{_sysconfdir}
-mkdir -vp %{buildroot}/%{_localstatedir}/log/redwood
+mkdir -vp %{buildroot}/%{_localstatedir}/log/redwood-filter
 install -D -m 755 go/bin/redwood-filter %{buildroot}/%{_sbindir}/redwood-filter
-cp -vr go/src/code.google.com/p/redwood-filter/config %{buildroot}/%{_sysconfdir}/redwood
+cp -vr go/src/code.google.com/p/redwood-filter/config %{buildroot}/%{_sysconfdir}/redwood-filter
 
 %if "0%{dist}" == "0.v6"
 install -D -m 644 go/src/code.google.com/p/redwood-filter/startup/redhat %{buildroot}/%{_sysconfdir}/init.d/redwood-filter
@@ -80,7 +83,6 @@ fi
 
 # Post uninstall
 %postun
-/sbin/ldconfig
 %if "0%{dist}" == "0.v6"
 if [ -f /var/lock/subsys/redwood-filter ]; then
     killall -TERM redwood-filter 2>&1 >/dev/null || :
@@ -98,7 +100,7 @@ fi
 #%attr(755,root,root) %{_tmpfilesdir}
 %endif
 %{_sbindir}/redwood-filter
-%{_sysconfdir}/redwood
-%attr(755,redwood,redwood) %{_localstatedir}/log/redwood
+%{_sysconfdir}/redwood-filter
+%attr(755,redwood,redwood) %{_localstatedir}/log/redwood-filter
 
 # vi: expandtab shiftwidth=4 softtabstop=4 tabstop=4
