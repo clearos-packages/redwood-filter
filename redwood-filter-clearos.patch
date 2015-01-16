@@ -27,8 +27,8 @@ diff -ruN go/src/code.google.com/p/redwood-filter/config/redwood.conf go-clearos
 +access-log /var/log/redwood-filter/access.log
 diff -ruN go/src/code.google.com/p/redwood-filter/startup/redhat go-clearos/src/code.google.com/p/redwood-filter/startup/redhat
 --- go/src/code.google.com/p/redwood-filter/startup/redhat	2015-01-16 13:17:31.688775378 -0500
-+++ go-clearos/src/code.google.com/p/redwood-filter/startup/redhat	2015-01-16 13:26:47.407793484 -0500
-@@ -1,48 +1,64 @@
++++ go-clearos/src/code.google.com/p/redwood-filter/startup/redhat	2015-01-16 13:51:49.289842417 -0500
+@@ -1,48 +1,66 @@
  #!/bin/sh
  #
 -# Startup script for redwood
@@ -49,6 +49,8 @@ diff -ruN go/src/code.google.com/p/redwood-filter/startup/redhat go-clearos/src/
  	start)
 -		echo -n "Starting redwood: "
 +		echo -n "Starting redwood-filter: "
++		touch $PID_FILE
++		chown redwood:redwood $PID_FILE
  		ulimit -n 65535
 -		daemon redwood -pidfile $pidfile '>/dev/null' '2>>/var/log/redwood/errors.log' '&'
 +		daemon --user redwood redwood-filter -c /etc/redwood-filter/redwood.conf -pidfile $PID_FILE '>/dev/null' '2>>/var/log/redwood-filter/errors.log' '&'

@@ -1,0 +1,13 @@
+[Unit]
+Description=Redwood Content Filter
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/var/run/redwood-filter/redwood-filter.pid
+User=redwood
+ExecStart=/usr/sbin/redwood-filter -c /etc/redwood-filter/redwood.conf -pidfile /var/run/redwood-filter/redwood-filter.conf
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

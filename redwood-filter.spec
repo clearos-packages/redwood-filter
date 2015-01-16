@@ -43,9 +43,9 @@ cp -vr go/src/code.google.com/p/redwood-filter/config %{buildroot}/%{_sysconfdir
 
 %if "0%{dist}" == "0.v6"
 install -D -m 644 go/src/code.google.com/p/redwood-filter/startup/redhat %{buildroot}/%{_sysconfdir}/init.d/redwood-filter
-#%else
-#install -D -m 644 sysconf/redwood-filter.service %{buildroot}/lib/systemd/system/redwood-filter.service
-#install -D -m 644 sysconf/redwood-filter.tmp %{buildroot}/%{_tmpfilesdir}/redwood-filter.conf
+%else
+install -D -m 644 redwood-filter.service %{buildroot}/lib/systemd/system/redwood-filter.service
+install -D -m 644 redwood-filter.tmp %{buildroot}/%{_tmpfilesdir}/redwood-filter.conf
 %endif
 
 # Clean-up
@@ -62,12 +62,12 @@ install -D -m 644 go/src/code.google.com/p/redwood-filter/startup/redhat %{build
 if [ "$1" = 0 ]; then
     /sbin/chkconfig --del redwood-filter
 fi
-#%else
-#if [ "$1" = 0 ]; then
-#    /sbin/chkconfig --del redwood-filter
-#    /usr/bin/systemctl stop redwood-filter.service -q
-#    /usr/bin/systemctl disable redwood-filter.service -q
-#fi
+%else
+if [ "$1" = 0 ]; then
+    /sbin/chkconfig --del redwood-filter
+    /usr/bin/systemctl stop redwood-filter.service -q
+    /usr/bin/systemctl disable redwood-filter.service -q
+fi
 %endif
 
 # Post install
@@ -75,10 +75,10 @@ fi
 %if "0%{dist}" == "0.v6"
 /sbin/chkconfig --add redwood-filter >/dev/null 2>&1 || :
 /sbin/service redwood-filter condrestart >/dev/null 2>&1 || :
-#%else
-#/sbin/chkconfig --add redwood-filter >/dev/null 2>&1 || :
-#/usr/bin/systemctl enable redwood-filter.service -q
-#/usr/bin/systemctl reload-or-restart redwood-filter.service -q
+%else
+/sbin/chkconfig --add redwood-filter >/dev/null 2>&1 || :
+/usr/bin/systemctl enable redwood-filter.service -q
+/usr/bin/systemctl reload-or-restart redwood-filter.service -q
 %endif
 
 # Post uninstall
@@ -95,9 +95,9 @@ fi
 %defattr(-,root,root)
 %if "0%{dist}" == "0.v6"
 %attr(755,root,root) %{_sysconfdir}/init.d/redwood-filter
-#%else
-#%attr(755,root,root) /lib/systemd/system
-#%attr(755,root,root) %{_tmpfilesdir}
+%else
+%attr(755,root,root) /lib/systemd/system
+%attr(755,root,root) %{_tmpfilesdir}
 %endif
 %{_sbindir}/redwood-filter
 %{_sysconfdir}/redwood-filter
