@@ -26,14 +26,13 @@ Report bugs to: http://www.clearfoundation.com/docs/developer/bug_tracker/
 %prep
 
 %setup -q
-#mkdir -vp $(pwd)/go/{bin,pkg,src}
+mkdir -vp $(pwd)/go/{bin,pkg,src}
 #GOPATH=$(pwd)/go go get code.google.com/p/redwood-filter
-GOPATH=$(pwd)/go-src go get code.google.com/p/redwood-filter
 %patch0
 
 %build
 #GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
-GOPATH=$(pwd)/go-src go install code.google.com/p/redwood-filter
+GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
 
 # Install
 %install
