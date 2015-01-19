@@ -28,7 +28,7 @@ Report bugs to: http://www.clearfoundation.com/docs/developer/bug_tracker/
 %setup -q
 mkdir -vp $(pwd)/go/{bin,pkg,src}
 GOPATH=$(pwd)/go go get code.google.com/p/redwood-filter
-%patch0 -b .clearos
+%patch0
 
 %build
 GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
