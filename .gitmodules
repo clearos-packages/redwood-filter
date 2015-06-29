@@ -1,0 +1,12 @@
+[submodule "go/src/github.com/andybalholm/redwood"]
+	path = go/src/github.com/andybalholm/redwood
+	url = https://github.com/andybalholm/redwood.git
+[submodule "go/src/github.com/andybalholm/cascadia"]
+	path = go/src/github.com/andybalholm/cascadia
+	url = https://github.com/andybalholm/cascadia.git
+[submodule "go/src/github.com/andybalholm/dhash"]
+	path = go/src/github.com/andybalholm/dhash
+	url = https://github.com/andybalholm/dhash.git
+[submodule "go/src/github.com/andybalholm/go-bit"]
+	path = go/src/github.com/andybalholm/go-bit
+	url = https://github.com/andybalholm/go-bit.git

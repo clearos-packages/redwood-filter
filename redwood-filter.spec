@@ -3,7 +3,7 @@
 
 Name: redwood-filter
 Version: 1.0
-Release: 1%{dist}
+Release: 2%{dist}
 Vendor: ClearFoundation
 License: GPL
 Group: System Environment/Daemons
@@ -52,23 +52,23 @@ Report bugs to: http://www.clearfoundation.com/docs/developer/bug_tracker/
 
 %setup -q
 mkdir -vp $(pwd)/go/{bin,pkg,src}
-#GOPATH=$(pwd)/go go get code.google.com/p/redwood-filter
+#GOPATH=$(pwd)/go go get github.com/andybalholm/redwood
 %patch0
 
 %build
-#GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
-GOPATH=$(pwd)/go go install code.google.com/p/redwood-filter
+#GOPATH=$(pwd)/go go install github.com/andybalholm/redwood
+GOPATH=$(pwd)/go go install github.com/andybalholm/redwood
 
 # Install
 %install
 mkdir -vp %{buildroot}/%{_sbindir}
 mkdir -vp %{buildroot}/%{_sysconfdir}
 mkdir -vp %{buildroot}/%{_localstatedir}/log/redwood-filter
-install -D -m 755 go/bin/redwood-filter %{buildroot}/%{_sbindir}/redwood-filter
-cp -vr go/src/code.google.com/p/redwood-filter/config %{buildroot}/%{_sysconfdir}/redwood-filter
+install -D -m 755 go/bin/redwood %{buildroot}/%{_sbindir}/redwood-filter
+cp -vr go/src/github.com/andybalholm/redwood/config %{buildroot}/%{_sysconfdir}/redwood-filter
 
 %if "0%{dist}" == "0.v6"
-install -D -m 644 go/src/code.google.com/p/redwood-filter/startup/redhat %{buildroot}/%{_sysconfdir}/init.d/redwood-filter
+install -D -m 644 go/src/github.com/andybalholm/redwood/startup/redhat %{buildroot}/%{_sysconfdir}/init.d/redwood-filter
 %else
 install -D -m 644 redwood-filter.service %{buildroot}/lib/systemd/system/redwood-filter.service
 install -D -m 644 redwood-filter.tmp %{buildroot}/%{_tmpfilesdir}/redwood-filter.conf
