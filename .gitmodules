@@ -10,3 +10,9 @@
 [submodule "go/src/github.com/andybalholm/go-bit"]
 	path = go/src/github.com/andybalholm/go-bit
 	url = https://github.com/andybalholm/go-bit.git
+[submodule "go/src/github.com/kylelemons/go-gypsy"]
+	path = go/src/github.com/kylelemons/go-gypsy
+	url = https://github.com/kylelemons/go-gypsy.git
+[submodule "go/src/github.com/remogatto/ftpget"]
+	path = go/src/github.com/remogatto/ftpget
+	url = https://github.com/remogatto/ftpget.git
