@@ -3,7 +3,7 @@
 
 Name: redwood-filter
 Version: 1.0
-Release: 2%{dist}
+Release: 3%{dist}
 Vendor: ClearFoundation
 License: GPL
 Group: System Environment/Daemons
